@@ -2,9 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-<<<<<<< HEAD
-=======
     <mapping directory="$PROJECT_DIR$/selenium_payment_task" vcs="Git" />
->>>>>>> 9ffabbb (git repo issue)
   </component>
 </project>
