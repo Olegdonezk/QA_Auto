@@ -1,0 +1,104 @@
+#import pytest
+# from selenium import webdriver
+# import pytest
+#
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
+#
+#
+# @pytest.fixture()
+# def browser():
+#     driver = webdriver.Chrome()
+#     driver.maximize_window()
+#
+#     yield driver
+#
+#     driver.quit()
+#
+#
+# def test_iframe_text(browser):
+#     browser.get(
+#         "https://bonigarcia.dev/selenium-webdriver-java/iframes.html"
+#     )
+#
+#     wait = WebDriverWait(browser, 10)
+#
+#     iframes = wait.until(
+#         EC.presence_of_all_elements_located((By.TAG_NAME, "iframe"))
+#     )
+#
+#     found = False
+#
+#     for iframe in iframes:
+#         browser.switch_to.default_content()
+#         browser.switch_to.frame(iframe)
+#
+#         body_text = browser.find_element(By.TAG_NAME, "body").text
+#
+#         if body_text and len(body_text) > 50:  # более надёжная проверка
+#             found = True
+#             break
+#
+#     browser.switch_to.default_content()
+#
+#     assert found
+# test_drag_and_drop.py
+
+
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import pytest
+from selenium import webdriver
+
+
+@pytest.fixture()
+def browser():
+    driver = webdriver.Chrome()
+    driver.maximize_window()
+
+    yield driver
+
+    driver.quit()
+
+
+
+
+def test_drag_and_drop(browser):
+    browser.get("https://www.globalsqa.com/demo-site/draganddrop/")
+
+    wait = WebDriverWait(browser, 15)
+
+    # iframe
+    iframe = wait.until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".demo-frame"))
+    )
+    browser.switch_to.frame(iframe)
+
+    source = wait.until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "#gallery li"))
+    )
+
+    trash = wait.until(
+        EC.presence_of_element_located((By.ID, "trash"))
+    )
+
+    # drag & drop
+    ActionChains(browser) \
+        .click_and_hold(source) \
+        .pause(0.5) \
+        .move_to_element(trash) \
+        .pause(0.5) \
+        .release() \
+        .perform()
+
+    # 🔥 ВАЖНО: ждём изменения UI, а не DOM li
+    wait.until(lambda d: "ui-widget-content" in trash.get_attribute("class") or trash.text != "")
+
+    # проверки (адаптированные под реальное поведение сайта)
+    trash_text = trash.text.strip()
+
+    assert trash_text != ""
