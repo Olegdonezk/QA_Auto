@@ -72,7 +72,7 @@ def test_drag_and_drop(browser):
 
     wait = WebDriverWait(browser, 15)
 
-    # iframe
+
     iframe = wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".demo-frame"))
     )
@@ -86,7 +86,7 @@ def test_drag_and_drop(browser):
         EC.presence_of_element_located((By.ID, "trash"))
     )
 
-    # drag & drop
+
     ActionChains(browser) \
         .click_and_hold(source) \
         .pause(0.5) \
@@ -95,10 +95,10 @@ def test_drag_and_drop(browser):
         .release() \
         .perform()
 
-    # 🔥 ВАЖНО: ждём изменения UI, а не DOM li
+
     wait.until(lambda d: "ui-widget-content" in trash.get_attribute("class") or trash.text != "")
 
-    # проверки (адаптированные под реальное поведение сайта)
+
     trash_text = trash.text.strip()
 
     assert trash_text != ""
